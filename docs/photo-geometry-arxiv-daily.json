@@ -1,0 +1,27 @@
+{
+  "schema_version": 2,
+  "updated_at": null,
+  "topics": [
+    {"slug":"camera-calibration","name":"Camera Calibration & Intrinsics","description":"Intrinsic calibration, lens and radial distortion models, self- and auto-calibration, focal-length estimation and radiometric (photometric) camera calibration."},
+    {"slug":"extrinsic-calibration","name":"Extrinsic & Multi-Sensor Calibration","description":"Camera extrinsics and the rigid transforms between cameras, LiDAR, radar and IMUs: target-based and targetless, hand-eye, spatiotemporal and multi-camera calibration."},
+    {"slug":"generalized-cameras","name":"Generalized & Non-Central Camera Models","description":"Cameras modeled as sets of rays: generalized and non-central cameras, multi-camera rigs treated as one generalized camera, Plücker-line formulations, rolling-shutter, light-field/plenoptic and pushbroom models."},
+    {"slug":"omnidirectional-cameras","name":"Omnidirectional, Fisheye & Panoramic Imaging","description":"Catadioptric, fisheye, 360-degree and spherical cameras, equirectangular and unified camera models, wide-angle imaging, panorama and image stitching."},
+    {"slug":"projective-geometry","name":"Single-View & Projective Geometry","description":"Vanishing points, horizon lines, Manhattan/Atlanta-world structure, single-view metrology, image rectification, line-segment and wireframe geometry."},
+    {"slug":"epipolar-geometry","name":"Epipolar Geometry & Relative Pose","description":"Two- and multi-view relations: epipolar constraints, essential and fundamental matrices, homographies, trifocal tensors and relative camera pose."},
+    {"slug":"minimal-solvers","name":"Minimal Solvers & Robust Estimation","description":"Minimal solvers and polynomial (Gröbner-basis, homotopy) methods, RANSAC and its variants, consensus maximization, M-estimators and outlier-robust geometric fitting."},
+    {"slug":"visual-localization","name":"Absolute Pose & Visual Localization","description":"Perspective-n-Point and absolute pose, camera localization and relocalization against maps, scene coordinate regression and absolute pose regression."},
+    {"slug":"feature-matching","name":"Feature Matching & Correspondence","description":"Keypoint detection and description, sparse, semi-dense and dense feature matching, and geometric correspondence estimation."},
+    {"slug":"structure-from-motion","name":"Structure from Motion & Bundle Adjustment","description":"Incremental and global structure from motion, bundle adjustment, rotation, translation and motion averaging, and camera resectioning."},
+    {"slug":"feed-forward-reconstruction","name":"Feed-Forward 3D Reconstruction","description":"Learned geometry models that regress pointmaps, depth and cameras directly from images (DUSt3R-, MASt3R- and VGGT-style), including pose-free and unposed reconstruction."},
+    {"slug":"stereo-mvs","name":"Stereo & Multi-View Stereo","description":"Binocular stereo and disparity estimation, stereo rectification, multi-view stereo, depth fusion and dense surface reconstruction."},
+    {"slug":"slam-odometry","name":"SLAM & Visual Odometry","description":"Visual and visual-inertial odometry, monocular, stereo and RGB-D SLAM, loop closure and pose-graph optimization."},
+    {"slug":"motion-estimation","name":"Optical Flow, Scene Flow & Ego-Motion","description":"Dense 2D and 3D motion: optical flow, scene flow, point tracking, motion fields and camera ego-motion estimation."},
+    {"slug":"monocular-depth","name":"Monocular Depth & Surface Normals","description":"Single-image relative and metric depth estimation, depth completion and surface-normal estimation."},
+    {"slug":"point-cloud-registration","name":"Point Cloud Registration","description":"Rigid alignment of 3D data: point-cloud and point-set registration, ICP variants, scan matching and image-to-point-cloud registration."},
+    {"slug":"photometric-3d","name":"Photometric Stereo & Shape-from-X","description":"Geometry from light and optics: photometric stereo, shape from shading, polarization and (de)focus, structured light, fringe projection, time-of-flight and inverse rendering."},
+    {"slug":"neural-rendering","name":"Neural Rendering & Novel View Synthesis","description":"Radiance fields (NeRF), 3D Gaussian Splatting, image-based rendering and novel-view synthesis."},
+    {"slug":"photogrammetry","name":"Photogrammetry & Satellite Geometry","description":"Aerial and close-range photogrammetry, aerial triangulation and bundle block adjustment, satellite stereo, rational polynomial camera models, orthorectification and digital surface models."},
+    {"slug":"geo-localization","name":"Geo-Localization & Place Recognition","description":"Visual place recognition, image and camera geolocation, cross-view (ground-to-aerial and ground-to-satellite) localization and sun-position cues."}
+  ],
+  "papers": {}
+}

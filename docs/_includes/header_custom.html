@@ -1,0 +1,8 @@
+<nav aria-label="Auxiliary" class="aux-nav">
+  <ul class="aux-nav-list">
+    <li class="aux-nav-list-item"><a href="{{ '/explorer.html' | relative_url }}" class="site-button">Paper Explorer</a></li>
+    {%- if site.github.repository_url %}
+    <li class="aux-nav-list-item"><a href="{{ site.github.repository_url }}" class="site-button" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    {%- endif %}
+  </ul>
+</nav>

@@ -1,0 +1,44 @@
+# Jekyll / GitHub Pages configuration for Photo Geometry arXiv Daily.
+# GitHub Pages: Settings -> Pages -> "Deploy from a branch" -> <default branch> + /docs
+
+title: Photo Geometry arXiv Daily
+description: >-
+  Daily-updated arXiv papers on photo geometry: camera models, intrinsic and
+  extrinsic calibration, generalized cameras, multi-view geometry, pose
+  estimation and 3D reconstruction.
+lang: en-US
+
+# `url` and `baseurl` are set automatically by GitHub Pages (jekyll-github-metadata),
+# so the site works under whatever name the repository has. Only set them for a
+# custom deployment, e.g.:
+# url: "https://example.github.io"
+# baseurl: "/DailyPhotoGeomotryArxiv"
+
+# Theme: Just the Docs (pinned version, loaded by GitHub Pages' remote theme support)
+remote_theme: just-the-docs/just-the-docs@v0.8.2
+color_scheme: photogeo            # _sass/color_schemes/photogeo.scss
+
+# The Paper Explorer (explorer.html) provides search over every paper, so the
+# theme's page search is disabled: it would index thousands of table rows.
+search_enabled: false
+
+heading_anchors: true
+back_to_top: true
+back_to_top_text: "Back to top"
+favicon_ico: "/assets/images/favicon.ico"
+# Header buttons and footer text: _includes/header_custom.html and _includes/footer_custom.html
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+  - jekyll-include-cache
+
+# Files that must not be published as pages
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache

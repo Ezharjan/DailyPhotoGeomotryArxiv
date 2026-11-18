@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Local runs of test_local.py --mode quick
+_local_test/
+
+# Jekyll (local preview of docs/)
+docs/_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+vendor/
+.bundle/
+
+# Files set aside for deletion
+_to_delete/
+
+# Environment and secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,59 @@
+name: Daily arXiv update
+
+on:
+  schedule:
+    # Every day at 03:17 UTC, after arXiv's announcement of new papers
+    # (Sunday to Thursday at 20:00 US Eastern, i.e. 00:00 or 01:00 UTC).
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      max_results:
+        description: "Papers requested per topic (leave empty to use config.yaml)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+# Shared with the code-link workflow so the two never write docs/ at the same time.
+concurrency:
+  group: arxiv-data
+  cancel-in-progress: false
+
+env:
+  # Identity used for the automatic data commits.
+  COMMIT_USER_NAME: github-actions[bot]
+  COMMIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
+jobs:
+  update:
+    name: Fetch papers and rebuild the site
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Fetch new papers and rebuild docs/
+        env:
+          MAX_RESULTS: ${{ github.event.inputs.max_results }}
+        run: |
+          if [ -n "${MAX_RESULTS}" ]; then
+            python daily_arxiv.py --max-results "${MAX_RESULTS}"
+          else
+            python daily_arxiv.py
+          fi
+
+      - name: Commit and push changes
+        run: |
+          bash .github/scripts/commit-and-push.sh "data: daily photo-geometry arXiv update"

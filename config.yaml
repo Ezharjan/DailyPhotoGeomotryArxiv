@@ -1,0 +1,264 @@
+# =============================================================================
+# Photo Geometry arXiv Daily — configuration
+# =============================================================================
+# Tracks new arXiv papers on photo geometry (geometric computer vision):
+# camera models and calibration (intrinsics/extrinsics), generalized cameras,
+# multi-view geometry, pose estimation, 3D reconstruction and related topics.
+#
+# How a topic is matched on arXiv
+# -------------------------------
+# * title_keywords  -> phrase must appear in the paper TITLE.
+# * keywords        -> phrase may appear in the TITLE or the ABSTRACT.
+#                      Use only specific technical phrases here; generic phrases
+#                      that are often mentioned in passing belong in title_keywords.
+# * exclude_title_keywords (optional) -> papers whose TITLE contains any of these
+#                      phrases are dropped (used to filter out medical imaging, etc.).
+# * Every topic query is restricted to the arXiv categories listed under
+#   `arxiv.categories` (a paper matches if ANY of its categories is listed).
+#
+# arXiv's search engine is case-insensitive, treats hyphens as spaces and
+# stems words ("calibrated" == "calibration", "projective" == "projection",
+# "generalized" == "generation"). The phrases below were chosen and tested
+# against the live arXiv API with this behaviour in mind.
+#
+# Keep each topic's `slug` stable: papers are linked to topics by slug, so
+# renaming a slug starts that topic's history from scratch.
+# =============================================================================
+
+arxiv:
+  # arXiv categories searched (cross-listed papers are included).
+  categories: ["cs.CV", "cs.RO", "cs.GR", "eess.IV"]
+  # Newest papers requested per topic and run (sorted by submission date).
+  # Topics receive far fewer than 100 new papers per day, so nothing is missed.
+  max_results_per_topic: 100
+  # arXiv API terms of use ask for at most one request every 3 seconds.
+  request_delay_seconds: 3.5
+  num_retries: 5
+
+code_links:
+  # Code and project links are taken from the arXiv abstract/comments first.
+  # Papers without a link in their metadata are then looked up on the
+  # Hugging Face Papers API (the original Papers with Code API was shut down in July 2025).
+  huggingface_lookup: true
+  # Upper bound on Hugging Face API requests per run (keeps runs fast and polite).
+  max_lookups_per_run: 300
+  # `--update-links` re-checks papers without code that were submitted within
+  # this many days (authors often release code a few weeks after submission).
+  recheck_days: 60
+
+output:
+  # Single source of truth for all tracked papers (also used by the Explorer page).
+  data_file: "docs/photo-geometry-arxiv-daily.json"
+  # Jekyll site root (GitHub Pages: "Deploy from a branch" -> /docs).
+  site_dir: "docs"
+  # Number of most recent papers listed on the home page.
+  home_latest_papers: 60
+  # Maximum number of papers rendered on each topic page (the rest stay
+  # searchable in the Paper Explorer).
+  topic_page_max_papers: 300
+
+topics:
+  # ---------------------------------------------------------------------------
+  # Camera models and calibration
+  # ---------------------------------------------------------------------------
+  - slug: camera-calibration
+    name: "Camera Calibration & Intrinsics"
+    description: "Intrinsic calibration, lens and radial distortion models, self- and auto-calibration, focal-length estimation and radiometric (photometric) camera calibration."
+    title_keywords: ["camera calibration", "calibrating cameras", "intrinsic calibration", "camera intrinsics",
+                     "intrinsic parameters", "camera parameters", "lens distortion", "radial distortion",
+                     "distortion model", "camera self-calibration", "camera auto-calibration", "autocalibration",
+                     "focal length", "calibration target", "calibration pattern", "radiometric calibration",
+                     "photometric calibration", "camera response function", "vignetting"]
+    keywords: ["radial distortion", "lens distortion", "intrinsic calibration", "camera self-calibration",
+               "focal length estimation", "camera response function"]
+
+  - slug: extrinsic-calibration
+    name: "Extrinsic & Multi-Sensor Calibration"
+    description: "Camera extrinsics and the rigid transforms between cameras, LiDAR, radar and IMUs: target-based and targetless, hand-eye, spatiotemporal and multi-camera calibration."
+    title_keywords: ["extrinsic calibration", "extrinsic parameters", "camera extrinsics", "LiDAR-camera calibration",
+                     "camera-LiDAR calibration", "LiDAR calibration", "camera-IMU calibration",
+                     "visual-inertial calibration", "hand-eye calibration", "targetless calibration",
+                     "target-free calibration", "target-less calibration", "multi-camera calibration",
+                     "stereo calibration", "spatiotemporal calibration", "radar-camera calibration",
+                     "multi-sensor calibration"]
+    keywords: ["extrinsic calibration", "hand-eye calibration", "LiDAR-camera calibration", "camera-LiDAR calibration",
+               "camera-IMU calibration", "targetless calibration", "target-free calibration"]
+
+  - slug: generalized-cameras
+    name: "Generalized & Non-Central Camera Models"
+    description: "Cameras modeled as sets of rays: generalized and non-central cameras, multi-camera rigs treated as one generalized camera, Plücker-line formulations, rolling-shutter, light-field/plenoptic and pushbroom models."
+    title_keywords: ["generalized camera", "non-central camera", "noncentral camera", "generic camera model",
+                     "camera model", "camera models", "multi-camera rig", "camera rig", "rolling shutter",
+                     "light field camera", "plenoptic camera", "pushbroom", "Plücker", "Plucker", "axial camera"]
+    keywords: ["generalized epipolar", "generalized essential matrix", "non-central camera", "noncentral camera",
+               "multi-camera rig", "pushbroom camera", "axial camera"]
+
+  - slug: omnidirectional-cameras
+    name: "Omnidirectional, Fisheye & Panoramic Imaging"
+    description: "Catadioptric, fisheye, 360-degree and spherical cameras, equirectangular and unified camera models, wide-angle imaging, panorama and image stitching."
+    title_keywords: ["omnidirectional camera", "omnidirectional image", "omnidirectional vision", "omnidirectional video",
+                     "omnidirectional depth", "omnidirectional stereo", "fisheye", "fish-eye", "catadioptric",
+                     "360-degree", "equirectangular", "panoramic camera", "panoramic image", "panoramic depth",
+                     "panoramic video", "panorama stitching", "image stitching", "spherical image",
+                     "spherical camera", "wide-angle", "ultra-wide"]
+    keywords: ["catadioptric", "omnidirectional camera", "fisheye camera", "fisheye lens", "fisheye image",
+               "equirectangular projection", "unified camera model", "spherical camera model"]
+
+  # ---------------------------------------------------------------------------
+  # Single-view, two-view and multi-view geometry
+  # ---------------------------------------------------------------------------
+  - slug: projective-geometry
+    name: "Single-View & Projective Geometry"
+    description: "Vanishing points, horizon lines, Manhattan/Atlanta-world structure, single-view metrology, image rectification, line-segment and wireframe geometry."
+    title_keywords: ["vanishing point", "horizon line", "Manhattan world", "Atlanta world", "single view metrology",
+                     "single-view metrology", "projective geometry", "projective reconstruction",
+                     "metric rectification", "affine rectification", "perspective field", "line segment detection",
+                     "wireframe", "cross-ratio", "perspective distortion"]
+    keywords: ["vanishing point", "Manhattan world", "Atlanta world", "single view metrology", "metric rectification",
+               "absolute conic"]
+    exclude_title_keywords: ["tomography", "CT", "X-ray"]
+
+  - slug: epipolar-geometry
+    name: "Epipolar Geometry & Relative Pose"
+    description: "Two- and multi-view relations: epipolar constraints, essential and fundamental matrices, homographies, trifocal tensors and relative camera pose."
+    title_keywords: ["epipolar", "essential matrix", "fundamental matrix", "relative pose estimation",
+                     "relative camera pose", "relative pose solver", "homography", "trifocal", "two-view geometry",
+                     "multiple view geometry", "multi-view geometry", "five-point", "eight-point"]
+    keywords: ["epipolar geometry", "epipolar constraint", "essential matrix", "fundamental matrix", "trifocal tensor",
+               "two-view relative pose", "homography estimation", "five-point algorithm", "eight-point algorithm"]
+
+  - slug: minimal-solvers
+    name: "Minimal Solvers & Robust Estimation"
+    description: "Minimal solvers and polynomial (Gröbner-basis, homotopy) methods, RANSAC and its variants, consensus maximization, M-estimators and outlier-robust geometric fitting."
+    title_keywords: ["minimal solver", "minimal solvers", "RANSAC", "robust model fitting", "robust fitting",
+                     "robust estimation", "outlier rejection", "consensus maximization", "Gröbner", "Grobner",
+                     "polynomial solver", "homotopy continuation", "graduated non-convexity", "M-estimator",
+                     "MAGSAC", "truncated least squares"]
+    keywords: ["minimal solver", "Gröbner basis", "Grobner basis", "consensus maximization", "graduated non-convexity",
+               "robust model fitting"]
+
+  - slug: visual-localization
+    name: "Absolute Pose & Visual Localization"
+    description: "Perspective-n-Point and absolute pose, camera localization and relocalization against maps, scene coordinate regression and absolute pose regression."
+    title_keywords: ["absolute pose", "perspective-n-point", "camera pose estimation", "camera localization",
+                     "camera relocalization", "visual localization", "visual relocalization",
+                     "scene coordinate regression", "absolute pose regression", "camera pose",
+                     "map-free relocalization"]
+    keywords: ["perspective-n-point", "absolute pose estimation", "camera relocalization", "visual relocalization",
+               "scene coordinate regression", "absolute pose regression"]
+
+  - slug: feature-matching
+    name: "Feature Matching & Correspondence"
+    description: "Keypoint detection and description, sparse, semi-dense and dense feature matching, and geometric correspondence estimation."
+    title_keywords: ["feature matching", "image matching", "local feature matching", "local feature detection",
+                     "keypoint matching", "keypoint detection and description", "feature detection and description",
+                     "local descriptor", "feature descriptor", "dense correspondence", "correspondence estimation",
+                     "dense matching", "semi-dense matching", "detector-free", "LightGlue", "LoFTR", "SuperGlue",
+                     "SuperPoint", "matcher"]
+    keywords: ["local feature matching", "keypoint matching", "LightGlue", "LoFTR", "SuperGlue", "SuperPoint",
+               "detector-free matching"]
+    exclude_title_keywords: ["semantic correspondence"]
+
+  # ---------------------------------------------------------------------------
+  # 3D reconstruction, SLAM and motion
+  # ---------------------------------------------------------------------------
+  - slug: structure-from-motion
+    name: "Structure from Motion & Bundle Adjustment"
+    description: "Incremental and global structure from motion, bundle adjustment, rotation, translation and motion averaging, and camera resectioning."
+    title_keywords: ["structure from motion", "SfM", "bundle adjustment", "rotation averaging", "translation averaging",
+                     "motion averaging", "camera resectioning"]
+    keywords: ["rotation averaging", "translation averaging", "motion averaging", "global structure from motion",
+               "incremental structure from motion"]
+
+  - slug: feed-forward-reconstruction
+    name: "Feed-Forward 3D Reconstruction"
+    description: "Learned geometry models that regress pointmaps, depth and cameras directly from images (DUSt3R-, MASt3R- and VGGT-style), including pose-free and unposed reconstruction."
+    title_keywords: ["DUSt3R", "MASt3R", "VGGT", "VGGSfM", "pointmap", "pointmaps", "feed-forward 3D",
+                     "feed-forward reconstruction", "feed-forward Gaussian", "pose-free", "unposed",
+                     "geometry foundation model", "geometric foundation model", "CUT3R", "Fast3R", "MonST3R",
+                     "Spann3R"]
+    keywords: ["DUSt3R", "MASt3R", "VGGT", "VGGSfM", "pointmap", "pointmaps", "feed-forward 3D reconstruction",
+               "pose-free 3D reconstruction", "unposed images"]
+    # Non-photographic (medical) imaging is out of scope.
+    exclude_title_keywords: ["X-ray", "CT", "tomography", "angiography", "MRI", "ultrasound"]
+
+  - slug: stereo-mvs
+    name: "Stereo & Multi-View Stereo"
+    description: "Binocular stereo and disparity estimation, stereo rectification, multi-view stereo, depth fusion and dense surface reconstruction."
+    title_keywords: ["stereo matching", "stereo depth", "stereo vision", "stereo reconstruction", "stereo rectification",
+                     "stereo correspondence", "binocular stereo", "disparity estimation", "disparity map",
+                     "multi-view stereo", "MVS", "depth fusion", "plane sweep", "surface reconstruction",
+                     "dense reconstruction"]
+    keywords: ["stereo matching", "multi-view stereo", "disparity estimation", "plane sweep"]
+
+  - slug: slam-odometry
+    name: "SLAM & Visual Odometry"
+    description: "Visual and visual-inertial odometry, monocular, stereo and RGB-D SLAM, loop closure and pose-graph optimization."
+    title_keywords: ["SLAM", "visual odometry", "visual-inertial", "loop closure", "simultaneous localization and mapping",
+                     "pose graph", "LiDAR-visual", "visual-LiDAR"]
+    keywords: ["visual SLAM", "monocular SLAM", "RGB-D SLAM", "dense SLAM", "visual odometry", "visual-inertial odometry",
+               "visual-inertial SLAM", "Gaussian splatting SLAM"]
+
+  - slug: motion-estimation
+    name: "Optical Flow, Scene Flow & Ego-Motion"
+    description: "Dense 2D and 3D motion: optical flow, scene flow, point tracking, motion fields and camera ego-motion estimation."
+    title_keywords: ["optical flow", "scene flow", "ego-motion", "egomotion", "motion field", "point tracking",
+                     "tracking any point", "camera motion estimation"]
+    keywords: ["optical flow estimation", "scene flow estimation", "ego-motion estimation", "egomotion estimation",
+               "focus of expansion"]
+
+  - slug: monocular-depth
+    name: "Monocular Depth & Surface Normals"
+    description: "Single-image relative and metric depth estimation, depth completion and surface-normal estimation."
+    title_keywords: ["depth estimation", "monocular depth", "metric depth", "depth completion", "depth prediction",
+                     "surface normal", "normal estimation", "Depth Anything"]
+    keywords: ["monocular depth estimation", "metric depth estimation", "surface normal estimation"]
+
+  - slug: point-cloud-registration
+    name: "Point Cloud Registration"
+    description: "Rigid alignment of 3D data: point-cloud and point-set registration, ICP variants, scan matching and image-to-point-cloud registration."
+    title_keywords: ["point cloud registration", "point set registration", "LiDAR registration", "scan registration",
+                     "image-to-point cloud registration", "iterative closest point", "scan matching",
+                     "point cloud alignment"]
+    keywords: ["point cloud registration", "iterative closest point", "point set registration", "scan matching"]
+    exclude_title_keywords: ["MRI", "CT", "ultrasound", "medical", "surgical", "brain"]
+
+  # ---------------------------------------------------------------------------
+  # Photometric geometry, rendering and geospatial geometry
+  # ---------------------------------------------------------------------------
+  - slug: photometric-3d
+    name: "Photometric Stereo & Shape-from-X"
+    description: "Geometry from light and optics: photometric stereo, shape from shading, polarization and (de)focus, structured light, fringe projection, time-of-flight and inverse rendering."
+    title_keywords: ["photometric stereo", "shape from shading", "shape from polarization", "structured light",
+                     "fringe projection", "depth from defocus", "shape from focus", "depth from focus",
+                     "inverse rendering", "BRDF", "time-of-flight"]
+    keywords: ["photometric stereo", "shape from shading", "shape from polarization", "structured light",
+               "fringe projection", "depth from defocus", "shape from focus"]
+
+  - slug: neural-rendering
+    name: "Neural Rendering & Novel View Synthesis"
+    description: "Radiance fields (NeRF), 3D Gaussian Splatting, image-based rendering and novel-view synthesis."
+    title_keywords: ["novel view synthesis", "view synthesis", "radiance field", "NeRF", "Gaussian splatting",
+                     "3D Gaussian", "3DGS", "Gaussian splats", "image-based rendering", "neural rendering"]
+    # Non-photographic (medical) imaging is out of scope.
+    exclude_title_keywords: ["X-ray", "CT", "tomography", "angiography", "MRI", "ultrasound"]
+
+  - slug: photogrammetry
+    name: "Photogrammetry & Satellite Geometry"
+    description: "Aerial and close-range photogrammetry, aerial triangulation and bundle block adjustment, satellite stereo, rational polynomial camera models, orthorectification and digital surface models."
+    title_keywords: ["photogrammetry", "photogrammetric", "aerial triangulation", "satellite stereo",
+                     "multi-view satellite", "satellite photogrammetry", "rational polynomial", "orthorectification",
+                     "orthophoto", "digital surface model", "georeferencing", "georeferenced",
+                     "bundle block adjustment", "oblique aerial"]
+    keywords: ["photogrammetry", "aerial triangulation", "rational polynomial camera", "rational function model",
+               "orthorectification", "bundle block adjustment"]
+
+  - slug: geo-localization
+    name: "Geo-Localization & Place Recognition"
+    description: "Visual place recognition, image and camera geolocation, cross-view (ground-to-aerial and ground-to-satellite) localization and sun-position cues."
+    title_keywords: ["visual place recognition", "place recognition", "geo-localization", "geolocalization",
+                     "image geolocation", "camera geolocation", "cross-view geo-localization",
+                     "cross-view localization", "ground-to-aerial", "aerial-to-ground", "ground-to-satellite",
+                     "sun position"]
+    keywords: ["visual place recognition", "cross-view geo-localization", "image geo-localization",
+               "camera geolocation"]

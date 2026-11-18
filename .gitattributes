@@ -1,0 +1,10 @@
+# Normalize line endings: LF in the repository and in working copies, so files
+# written by GitHub Actions (Linux) and edited on Windows never differ only by CRLF.
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.ico binary
+*.gif binary
+*.webp binary

@@ -1,0 +1,806 @@
+/* =============================================================================
+   Photo Geometry arXiv Daily — site styles (plain CSS, loaded after Just the Docs)
+   All site-specific classes are prefixed with `pg-`.
+   ============================================================================= */
+
+:root {
+  --pg-accent: #1f5fd6;
+  --pg-accent-dark: #1747a6;
+  --pg-accent-soft: #eef3fd;
+  --pg-code: #0b7a5b;
+  --pg-code-soft: #e6f5ef;
+  --pg-text: #4a4855;
+  --pg-heading: #1f1d24;
+  --pg-muted: #6b6878;
+  --pg-border: #e4e6ee;
+  --pg-surface: #ffffff;
+  --pg-surface-alt: #f6f7fb;
+  --pg-radius: 8px;
+  --pg-shadow: 0 1px 2px rgba(17, 24, 39, 0.06), 0 4px 14px rgba(17, 24, 39, 0.06);
+}
+
+/* -----------------------------------------------------------------------------
+   Layout: a wider content column on large screens (tables need the room),
+   while running text stays at a comfortable reading width.
+   Just the Docs: nav 16.5rem + content 50rem; here: content 72rem.
+   ----------------------------------------------------------------------------- */
+@media (min-width: 66.5rem) {
+  .side-bar {
+    width: calc((100% - 88.5rem) / 2 + 16.5rem);
+    min-width: 16.5rem;
+  }
+  .main {
+    max-width: 72rem;
+    margin-left: max(16.5rem, calc((100% - 88.5rem) / 2 + 16.5rem));
+  }
+}
+
+.main-content main > p,
+.main-content main > ul:not([class]),
+.main-content main > ol:not([class]),
+.main-content main > blockquote,
+.main-content main > dl {
+  max-width: 50rem;
+}
+
+/* Site title in the sidebar: geometry mark before the name, sized to fit the
+   fixed-height header on two lines (the theme sets its size with !important). */
+@media (min-width: 50rem) {
+  .side-bar .site-title {
+    font-size: 1.0625rem !important;
+    font-weight: 600;
+    line-height: 1.25 !important;
+  }
+}
+
+.site-title::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-right: 0.6rem;
+  background: url("../images/favicon.svg") center / contain no-repeat;
+}
+
+/* Sidebar footer (from _includes/nav_footer_custom.html): readable contrast */
+.side-bar .pg-nav-footer {
+  color: #5f5c69;
+}
+
+.pg-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.main-content a:focus-visible,
+.pg-btn:focus-visible,
+.pg-topic-card:focus-visible,
+.pg-filter-input:focus-visible,
+.pg-explorer-controls :focus-visible {
+  outline: 2px solid var(--pg-accent);
+  outline-offset: 2px;
+}
+
+/* -----------------------------------------------------------------------------
+   Text helpers
+   ----------------------------------------------------------------------------- */
+.pg-lead {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--pg-text);
+}
+
+.pg-updated,
+.pg-section-note {
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+}
+
+/* Keep ISO dates (2026-11-17) on one line: browsers may break lines at hyphens */
+.pg-updated time,
+.pg-section-note time,
+.pg-topic-meta time,
+.pg-filter-count time {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-empty {
+  padding: 1rem 1.25rem;
+  color: var(--pg-muted);
+  background: var(--pg-surface-alt);
+  border: 1px dashed var(--pg-border);
+  border-radius: var(--pg-radius);
+}
+
+/* -----------------------------------------------------------------------------
+   Home: hero, statistics, topic cards
+   ----------------------------------------------------------------------------- */
+.pg-hero {
+  position: relative;
+  margin: 0 0 1.5rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  background: linear-gradient(135deg, #f3f6ff 0%, #ffffff 65%);
+  border: 1px solid var(--pg-border);
+  border-radius: 12px;
+}
+
+/* Two-view geometry illustration, shown only where it cannot overlap the text */
+@media (min-width: 75rem) {
+  .pg-hero {
+    min-height: 12.5rem;
+    padding-right: 22rem;
+    background:
+      url("../images/hero-geometry.svg") right 1.5rem center / 19rem auto no-repeat,
+      linear-gradient(135deg, #f3f6ff 0%, #ffffff 65%);
+  }
+}
+
+.pg-eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pg-accent);
+}
+
+.main-content h1.pg-hero-title {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  line-height: 1.2;
+  color: var(--pg-heading);
+}
+
+.pg-hero .pg-lead {
+  max-width: 40rem;
+  margin: 0 0 0.75rem;
+}
+
+.pg-hero .pg-updated {
+  margin: 0 0 1rem;
+}
+
+.pg-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.main-content ul.pg-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.main-content .pg-stats li.pg-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0.9rem 1rem;
+  background: var(--pg-surface);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+}
+
+.main-content .pg-stats li.pg-stat::before {
+  content: none;
+}
+
+.pg-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--pg-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-stat-label {
+  font-size: 0.8125rem;
+  color: var(--pg-muted);
+}
+
+.main-content ul.pg-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.main-content .pg-topic-grid > li {
+  margin: 0;
+}
+
+.main-content .pg-topic-grid > li::before {
+  content: none;
+}
+
+.main-content a.pg-topic-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.9rem 1rem;
+  color: var(--pg-text);
+  text-decoration: none;
+  background: var(--pg-surface);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.main-content a.pg-topic-card:hover {
+  border-color: var(--pg-accent);
+  box-shadow: var(--pg-shadow);
+  text-decoration: none;
+}
+
+.pg-topic-name {
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--pg-heading);
+}
+
+.pg-topic-card:hover .pg-topic-name {
+  color: var(--pg-accent-dark);
+}
+
+.pg-topic-desc {
+  flex: 1 1 auto;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--pg-muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.pg-topic-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--pg-accent-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Date range of the topic's tracked papers, on its own line under the count */
+.pg-topic-range {
+  font-weight: 400;
+  color: var(--pg-muted);
+}
+
+/* -----------------------------------------------------------------------------
+   Filter bar (enabled by JavaScript)
+   ----------------------------------------------------------------------------- */
+.pg-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.pg-filter[hidden] {
+  display: none;
+}
+
+.pg-filter-input,
+.pg-explorer-controls input[type="search"],
+.pg-explorer-controls select {
+  box-sizing: border-box;
+  min-height: 2.375rem;
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--pg-heading);
+  background: var(--pg-surface);
+  border: 1px solid #cfd4e2;
+  border-radius: 6px;
+}
+
+.pg-filter-input {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.pg-filter-input:focus,
+.pg-explorer-controls input:focus,
+.pg-explorer-controls select:focus {
+  border-color: var(--pg-accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(31, 95, 214, 0.18);
+}
+
+.pg-filter-check,
+.pg-field-check label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: var(--pg-text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.pg-filter-count {
+  font-size: 0.875rem;
+  color: var(--pg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -----------------------------------------------------------------------------
+   Paper tables
+   ----------------------------------------------------------------------------- */
+.main-content table.pg-papers,
+.main-content table.pg-topics-table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.main-content .pg-papers th,
+.main-content .pg-papers td,
+.main-content .pg-topics-table th,
+.main-content .pg-topics-table td {
+  min-width: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  vertical-align: top;
+}
+
+.main-content .pg-papers thead th,
+.main-content .pg-topics-table thead th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pg-muted);
+  background: var(--pg-surface-alt);
+  white-space: nowrap;
+}
+
+.main-content .pg-papers tbody tr:hover td {
+  background: #fafbff;
+}
+
+.main-content .pg-papers tr[hidden] {
+  display: none !important;
+}
+
+.pg-col-date {
+  width: 6.5rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-col-authors {
+  width: 22%;
+  color: var(--pg-text);
+}
+
+.pg-col-links {
+  width: 8.75rem;
+}
+
+.pg-col-num,
+.pg-col-count {
+  width: 5.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.main-content td.pg-col-num,
+.main-content td.pg-col-count,
+.main-content th.pg-col-num,
+.main-content th.pg-col-count {
+  text-align: right;
+}
+
+.main-content a.pg-title-link {
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--pg-heading);
+  text-decoration: none;
+}
+
+.main-content a.pg-title-link:hover {
+  color: var(--pg-accent);
+  text-decoration: underline;
+}
+
+.pg-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.6rem;
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--pg-muted);
+}
+
+.pg-id {
+  font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.pg-cat {
+  padding: 0 0.35rem;
+  color: var(--pg-accent-dark);
+  background: var(--pg-accent-soft);
+  border-radius: 4px;
+}
+
+.pg-venue {
+  font-weight: 600;
+  color: var(--pg-text);
+}
+
+.pg-comment {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pg-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.35rem;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+}
+
+.pg-tags-label {
+  color: var(--pg-muted);
+}
+
+.main-content a.pg-tag {
+  padding: 0.05rem 0.45rem;
+  color: var(--pg-text);
+  text-decoration: none;
+  background: var(--pg-surface-alt);
+  border: 1px solid var(--pg-border);
+  border-radius: 999px;
+}
+
+.main-content a.pg-tag:hover {
+  color: var(--pg-accent-dark);
+  border-color: var(--pg-accent);
+}
+
+.pg-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.main-content a.pg-btn {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--pg-accent-dark);
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--pg-accent-soft);
+  border: 1px solid #d6e2fb;
+  border-radius: 999px;
+}
+
+.main-content a.pg-btn:hover {
+  color: #fff;
+  background: var(--pg-accent);
+  border-color: var(--pg-accent);
+}
+
+.main-content a.pg-btn-code {
+  color: var(--pg-code);
+  background: var(--pg-code-soft);
+  border-color: #c9eadc;
+}
+
+.main-content a.pg-btn-code:hover {
+  color: #fff;
+  background: var(--pg-code);
+  border-color: var(--pg-code);
+}
+
+.pg-no-match {
+  margin-top: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   Topic page: "How this topic is matched" box
+   ----------------------------------------------------------------------------- */
+.pg-definition {
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  background: var(--pg-surface-alt);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+}
+
+.pg-definition > summary {
+  font-weight: 600;
+  color: var(--pg-heading);
+  cursor: pointer;
+}
+
+.main-content dl.pg-definition-list {
+  display: block;
+  margin: 0.75rem 0 0;
+}
+
+.main-content .pg-definition-list dt {
+  margin-top: 0.6rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--pg-heading);
+}
+
+.main-content .pg-definition-list dd {
+  margin: 0.2rem 0 0;
+  line-height: 1.8;
+}
+
+.pg-query {
+  display: block;
+  margin-bottom: 0.4rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* -----------------------------------------------------------------------------
+   Paper Explorer
+   ----------------------------------------------------------------------------- */
+.pg-explorer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  margin: 0 0 0.75rem;
+  padding: 1rem;
+  background: var(--pg-surface-alt);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+}
+
+.pg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pg-field > label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pg-muted);
+}
+
+.pg-field-grow {
+  flex: 1 1 20rem;
+}
+
+.pg-field-grow input {
+  width: 100%;
+}
+
+.pg-field select {
+  min-width: 11rem;
+  max-width: 100%;
+}
+
+.pg-field-check {
+  justify-content: flex-end;
+  min-height: 2.375rem;
+}
+
+.pg-field-check > label {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--pg-text);
+}
+
+.main-content ol.pg-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.main-content ol.pg-results > li.pg-result {
+  margin: 0 0 0.75rem;
+  padding: 0.9rem 1rem;
+  background: var(--pg-surface);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+}
+
+.main-content ol.pg-results > li.pg-result::before {
+  content: none;
+}
+
+.pg-result .pg-authors {
+  margin-top: 0.3rem;
+  font-size: 0.8125rem;
+  color: var(--pg-text);
+}
+
+.pg-result .pg-btns {
+  margin-top: 0.55rem;
+}
+
+.pg-more-wrap {
+  text-align: center;
+}
+
+.pg-more-wrap .btn[hidden] {
+  display: none;
+}
+
+/* -----------------------------------------------------------------------------
+   Floating "back to top" button
+   ----------------------------------------------------------------------------- */
+.pg-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #fff;
+  text-decoration: none;
+  background: var(--pg-accent);
+  border-radius: 50%;
+  box-shadow: var(--pg-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.pg-top.pg-top-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.pg-top:hover,
+.pg-top:focus {
+  color: #fff;
+  text-decoration: none;
+  background: var(--pg-accent-dark);
+}
+
+/* -----------------------------------------------------------------------------
+   Small screens: paper tables become cards
+   ----------------------------------------------------------------------------- */
+@media (max-width: 49.99rem) {
+  .pg-hero {
+    padding: 1.25rem;
+  }
+
+  .main-content h1.pg-hero-title {
+    font-size: 1.6rem;
+  }
+
+  .main-content table.pg-papers,
+  .main-content table.pg-topics-table {
+    min-width: 0;
+  }
+
+  .main-content .pg-papers thead,
+  .main-content .pg-topics-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .main-content .pg-papers,
+  .main-content .pg-papers tbody,
+  .main-content .pg-papers tr,
+  .main-content .pg-papers td,
+  .main-content .pg-topics-table,
+  .main-content .pg-topics-table tbody,
+  .main-content .pg-topics-table tr,
+  .main-content .pg-topics-table td {
+    display: block;
+    width: auto;
+  }
+
+  .main-content .pg-papers tr,
+  .main-content .pg-topics-table tr {
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid var(--pg-border);
+  }
+
+  .main-content .pg-papers td,
+  .main-content .pg-topics-table td {
+    padding: 0.15rem 0;
+    text-align: left;
+    border: 0;
+  }
+
+  .main-content .pg-papers td.pg-col-date {
+    font-size: 0.75rem;
+    color: var(--pg-muted);
+  }
+
+  .main-content .pg-papers td.pg-col-links {
+    padding-top: 0.45rem;
+  }
+
+  .main-content .pg-papers a.pg-title-link {
+    font-size: 0.9375rem;
+  }
+
+  .main-content .pg-topics-table td.pg-col-num {
+    display: none;
+  }
+
+  .main-content .pg-topics-table td.pg-col-count::before,
+  .main-content .pg-topics-table td.pg-col-date::before {
+    content: attr(data-label) ": ";
+    color: var(--pg-muted);
+  }
+
+  .pg-field,
+  .pg-field select {
+    width: 100%;
+  }
+
+  .pg-top {
+    right: 0.9rem;
+    bottom: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-top,
+  .main-content a.pg-topic-card {
+    transition: none;
+  }
+}
+
+@media print {
+  .pg-filter,
+  .pg-top,
+  .pg-hero-actions,
+  .pg-explorer-controls,
+  .pg-more-wrap {
+    display: none !important;
+  }
+
+  .pg-hero {
+    background: none;
+  }
+}
